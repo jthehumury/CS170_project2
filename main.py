@@ -3,6 +3,8 @@
 # Otniel Thehumury   862029595
 # Matthew Walsh      862088280
 
+from classifier import Classifier
+from validator import Validator
 import random
 
 class Problem:
@@ -72,6 +74,9 @@ class Problem:
     # Backward elimination.
     def backward_elimination(self, num_features):
 
+        # Convert num_features so it works on Matt's machine.
+        num_features = int(num_features)
+
         # Starting with all features:
         max_fitness = ([i for i in range(1, num_features + 1)], round(random.uniform(0,100),2))
 
@@ -124,12 +129,30 @@ def intro():
 
     print("\n2) Backward Elimination")
 
+    print("\n3) NN Classifier")
+
     choice = input("\nHere: ")
+    choice = int(choice)
+
     print("")
     p = Problem()
+
     if choice == 1:
+        # print("Chosen Forward Elimination")
         p.forward_selection(num_features)
-    else:
+
+    elif choice == 2:
+        # print("Chosen Backward Elimination")
         p.backward_elimination(num_features)
+
+    elif choice == 3:
+        print("Chosen KNN Classifier (Test)")
+        c = Classifier()
+        v = Validator()
+        c.Train(1)
+        v.Validate(c, 1)
+
+    else:
+        print("Incorrect choice - closing program.")
 
 intro()
