@@ -1,4 +1,4 @@
-# CS170 Project 02 / Submission 01
+# CS170 Project 02 / Part 02
 
 # Otniel Thehumury   862029595
 # Matthew Walsh      862088280
@@ -119,6 +119,73 @@ class Problem:
             print("Feature set " + self.print_features(max_fitness[0]) + " was best, accuracy is " + str(max_fitness[1]) + "%\n")
         print("Finished search!!! The best feature subset is " + self.print_features(max_fitness[0]) + ", which has an accuracy of " + str(max_fitness[1]) + "%\n")
 
+# Read in the dataset.
+def read_dataset():
+
+    # Prompt user with dataset options.
+    print("Which dataset would you like to use?\n")
+    print("1) Small Dataset #80")
+    print("2) Large Dataset #80")
+    print("---------------------")
+    print("3) Small Dataset #98")
+    print("4) Large Dataset #98")
+    print("---------------------")
+    print("5) Small Dataset #107")
+    print("6) Large Dataset #107")
+
+    # Read user input and convert to an integer.
+    data_choice = input("\nEnter dataset choice: ")
+    data_choice = int(data_choice)
+
+    if data_choice == 1:
+        filename = 'cs_170_small80.txt'
+
+    elif data_choice == 2:
+        filename = 'cs_170_large107.txt'
+
+    elif data_choice == 3:
+        filename = 'cs_170_small98.txt'
+
+    elif data_choice == 4:
+        filename = 'cs_170_large98.txt'
+
+    elif data_choice == 3:
+        filename = 'cs_170_small107.txt'
+
+    else:
+        filename = 'cs_170_large107.txt'
+
+    # Dataset to return.
+    dataset = []
+
+    # Read each line as new datapoint.
+    with open(filename) as file:
+        for line in file:
+
+            # New item.
+            newline = []
+
+            # Following items are features.
+            for word in line.split():
+
+                # Split value by 'e'.
+                split_val = word.split("e", 1)
+                val = float(split_val[0])
+
+                # Get exponent value.
+                exp = float(split_val[1][1:4])
+                if (split_val[1][0] == '-'):
+                    exp = exp * (-1)
+
+                # Calculate val with exp.
+                calc = val * pow(10, exp)
+                newline.append(calc)
+
+            # Add line to instances as onject.
+            dataset.append(newline)
+
+    return dataset
+
 # GUI Functions:
 def intro():
     num_features = input("Please enter total number of features: ")
@@ -146,11 +213,31 @@ def intro():
         p.backward_elimination(num_features)
 
     elif choice == 3:
-        print("Chosen KNN Classifier (Test)")
+        print("Chosen NN Classifier")
+
+        training_data = read_dataset()
+
+        print("Please select a feature subset.\n")
+        print("For example, type: 1 3 5 7 9")
+        print("Enter zero or blank to use all features.\n")
+        sub_input = input("Enter your choice here: ")
+
+        # Separate input into int list.
+        subset = []
+        for feat in sub_input.split():
+            subset.append(int(feat))
+
+        # Zero indicates all features.
+        if sub_input == "":
+            subset = [0]
+
+        # Train the classifier.
         c = Classifier()
-        v = Validator()
-        c.Train(1)
-        v.Validate(c, 1)
+        c.Train(training_data)
+        
+        # Implement validator.
+        v = Validator(c)
+        v.Validate(subset)
 
     else:
         print("Incorrect choice - closing program.")

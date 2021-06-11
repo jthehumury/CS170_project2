@@ -18,7 +18,7 @@ class Classifier:
 
         # Verify same number of features.
         if (len(inst_x) != len(inst_y)):
-            print("ERROR 2: Incompatible data points.")
+            print("ERROR: Incompatible data points.")
 
         dist_sum = 0
 
@@ -27,42 +27,11 @@ class Classifier:
 
         return math.sqrt(dist_sum)
 
-    # Read and normalize training data.
+    # Normalize training data.
     def Train(self, dataset):
 
-        # Small dataset choice.
-        if dataset == 1:
-            filename = 'cs_170_small80.txt'
-
-        # Large dataset choice.
-        else:
-            filename = 'cs_170_large80.txt'
-
-        # Read each line as new datapoint.
-        with open(filename) as file:
-            for line in file:
-
-                # New item.
-                newline = []
-
-                # Following items are features.
-                for word in line.split():
-
-                    # Split value by 'e'.
-                    split_val = word.split("e", 1)
-                    val = float(split_val[0])
-
-                    # Get exponent value.
-                    exp = float(split_val[1][1:4])
-                    if (split_val[1][0] == '-'):
-                        exp = exp * (-1)
-
-                    # Calculate val with exp.
-                    calc = val * pow(10, exp)
-                    newline.append(calc)
-
-                # Add line to instances as onject.
-                self.instances.append(newline)
+        # Store raw dataset in memory.
+        self.instances = dataset
 
         # Get number of features for normalization.
         self.num_points = len(self.instances)
@@ -132,13 +101,20 @@ class Classifier:
 
         # Verify same number of features.
         if (len(inst) != self.num_features + 1):
-            print("ERROR 1: Incompatible test instance.")
+            print("ERROR: Incompatible test instance.")
 
         # Nearest neighbor label.
+        nearest_inst = []
+        nearest_dist = 999999
 
         # Compare instance to training data.
         for t_inst in self.normalized:
-            print(self.Compute_Dist(inst, t_inst))
+            inst_dist = self.Compute_Dist(inst, t_inst)
+
+            # Determine nearest distance.
+            if inst_dist < nearest_dist:
+                nearest_dist = inst_dist
+                nearest_inst = t_inst
 
         # Return the class label.
-        return inst
+        return nearest_inst[0]
