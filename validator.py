@@ -25,14 +25,10 @@ class Validator:
 
         # Trim down to given subset.
 
-        for col in range(self.classifier.num_features + 1)[1:]:
-            if col not in subset:
-                to_delete.append(col)
-        
-        # print(to_delete)
-        # temp_normalized = np.delete(temp_normalized, to_delete, axis = 1)
-
-        # print(temp_normalized)
+        if subset != [0]:
+            for col in range(self.classifier.num_features + 1)[1:]:
+                if col not in subset:
+                    to_delete.append(col)
 
         # K-fold vars.
         fold_list = []
@@ -47,12 +43,12 @@ class Validator:
 
             # Prepare temporary datasets for k-folding.
             fold_list = self.classifier.normalized.copy()
-            folded = self.classifier.normalized[leave_out]
-            print(fold_list)
+            folded = self.classifier.normalized[leave_out].copy()
             del fold_list[leave_out]
-            print(fold_list)
+
+            # Remove the columns not specified by the subset.
             fold_list = np.delete(fold_list, to_delete, axis = 1)
-            print(fold_list)
+            folded = np.delete(folded, to_delete)
 
             # Create classifier for folded data.
             temp_c = Classifier()

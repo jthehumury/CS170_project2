@@ -7,6 +7,7 @@ from classifier import Classifier
 from validator import Validator
 import random
 
+# Handles Part I code.
 class Problem:
     def __init__(self):
         self.depth = 1
@@ -140,18 +141,21 @@ def read_dataset():
     data_choice = input("\nEnter dataset choice: ")
     data_choice = int(data_choice)
 
+    # Datasets 80 - Provided for Part II
     if data_choice == 1:
         filename = 'cs_170_small80.txt'
 
     elif data_choice == 2:
-        filename = 'cs_170_large107.txt'
+        filename = 'cs_170_large80.txt'
 
+    # Datasets 98 - Otniel Thehumury
     elif data_choice == 3:
         filename = 'cs_170_small98.txt'
 
     elif data_choice == 4:
         filename = 'cs_170_large98.txt'
 
+    # Datasets 107 - Matthew Walsh
     elif data_choice == 5:
         filename = 'cs_170_small107.txt'
 

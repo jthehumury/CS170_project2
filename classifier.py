@@ -27,15 +27,15 @@ class Classifier:
     def Compute_Dist(self, inst_x, inst_y):
 
         # Verify same number of features.
-        # if (len(inst_x) != len(inst_y)):
-        #     print("ERROR: Incompatible data points.")
+        if (len(inst_x) != len(inst_y)):
+            print("ERROR: Incompatible data points.")
 
         dist_sum = 0
 
-        for feat in range(self.num_features):
-            dist_sum += pow((inst_x[feat + 1] - inst_y[feat + 1]), 2)
+        for feat in range(len(inst_x))[1:]:
+            dist_sum += pow((inst_x[feat] - inst_y[feat]), 2)
 
-        print(math.sqrt(dist_sum))
+        # print(math.sqrt(dist_sum))
         return math.sqrt(dist_sum)
 
     # Normalize training data.
@@ -108,29 +108,26 @@ class Classifier:
     def Test(self, inst):
 
         # Verify same number of features.
-        # if (len(inst) != self.num_features + 1):
-        # print("ERROR: Incompatible test instance.")
+        if (len(inst) != self.num_features + 1):
+            print("ERROR: Incompatible test instance.")
 
         # Empty array for points and distances.
         nearest_inst = []
 
         # Compare instance to training data.
+        # TODO: Change back to normalized(?)
         for t_inst in self.normalized:
 
             inst_dist = self.Compute_Dist(inst, t_inst)
             nearest_inst.append([inst_dist, t_inst])
   
+        # Perform bubble sort on the array of distances.
         for i in range(self.num_points - 1):
-        # range(n) also work but outer loop will repeat one time more than needed.
   
-            # Last i elements are already in place
             for j in range(0, self.num_points - i - 1):
   
-                # traverse the array from 0 to n-i-1
-                # Swap if the element found is greater
                 if nearest_inst[j][0] > nearest_inst[j + 1][0] :
                     nearest_inst[j], nearest_inst[j + 1] = nearest_inst[j + 1], nearest_inst[j]
 
         # Return the class label.
-        print(nearest_inst[0][1][0])
         return nearest_inst[0][1][0]
