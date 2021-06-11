@@ -31,7 +31,7 @@ class Problem:
         # Starting with no features.
         max_fitness = ([], round(random.uniform(0,100),2))
 
-        print("Using no features and \"randon\" evaluation, I get an accuracy of " + str(max_fitness[1]) + "%\n")
+        print("Using no features and \"random\" evaluation, I get an accuracy of " + str(max_fitness[1]) + "%\n")
         
         while True:
 
@@ -46,6 +46,8 @@ class Problem:
                 if i in base:
                     continue
                 base.append(i)
+
+                # TODO: Integrate validator.
 
                 # Create random accuracy for feature(s).
                 fitness = (list(base), round(random.uniform(0,100),2))
@@ -123,7 +125,8 @@ class Problem:
 def read_dataset():
 
     # Prompt user with dataset options.
-    print("Which dataset would you like to use?\n")
+    print("--------------------------------------")
+    print("\nWhich dataset would you like to use?\n")
     print("1) Small Dataset #80")
     print("2) Large Dataset #80")
     print("---------------------")
@@ -149,7 +152,7 @@ def read_dataset():
     elif data_choice == 4:
         filename = 'cs_170_large98.txt'
 
-    elif data_choice == 3:
+    elif data_choice == 5:
         filename = 'cs_170_small107.txt'
 
     else:
@@ -188,38 +191,46 @@ def read_dataset():
 
 # GUI Functions:
 def intro():
-    num_features = input("Please enter total number of features: ")
 
-    print("\nType the number of the algorithm you want to run.")
+    print("\n--------------------------------------")
+    print("CS170 Project 02 / Part 02\n")
+    print("Otniel Thehumury 862029595")
+    print("Matthew Walsh    862088280")
+    print("--------------------------------------")
 
-    print("\n1) Forward Selection")
+    # Collect the number of features from the user.
+    # num_features = input("Please enter total number of features: ")
 
-    print("\n2) Backward Elimination")
+    # print("\nType the number of the algorithm you want to run.")
+    # print("\n1) Forward Selection")
+    # print("\n2) Backward Elimination")
+    # print("\n3) NN Classifier")
 
-    print("\n3) NN Classifier")
+    # choice = input("\nHere: ")
+    # choice = int(choice)
 
-    choice = input("\nHere: ")
-    choice = int(choice)
+    # Project 2, Part 2:
+    choice = 3
 
     print("")
     p = Problem()
 
     if choice == 1:
-        # print("Chosen Forward Elimination")
-        p.forward_selection(num_features)
+        print("Chosen Forward Elimination")
+        # p.forward_selection(num_features)
 
     elif choice == 2:
-        # print("Chosen Backward Elimination")
-        p.backward_elimination(num_features)
+        print("Chosen Backward Elimination")
+        # p.backward_elimination(num_features)
 
     elif choice == 3:
-        print("Chosen NN Classifier")
+        print("Nearest Neighbor Classifier:\n")
 
         training_data = read_dataset()
 
         print("Please select a feature subset.\n")
         print("For example, type: 1 3 5 7 9")
-        print("Enter zero or blank to use all features.\n")
+        print("Enter zero or blank for all features.\n")
         sub_input = input("Enter your choice here: ")
 
         # Separate input into int list.
@@ -234,10 +245,11 @@ def intro():
         # Train the classifier.
         c = Classifier()
         c.Train(training_data)
+        # c.Test([2.0, 2.1530859, 4.4095784, 3.6216757, 3.8451064, 2.9807186, 2.0171732, 0.5397355, 3.3933456, 2.2950856, 3.0431002])
         
         # Implement validator.
         v = Validator(c)
-        v.Validate(subset)
+        print(v.Validate(subset))
 
     else:
         print("Incorrect choice - closing program.")

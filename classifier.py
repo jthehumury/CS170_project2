@@ -7,9 +7,19 @@ import numpy as np
 import math
 
 class Classifier:
+
+    # Object initialization.
     def __init__(self):
+
+        # List of raw datapoints.
         self.instances = []
+
+        # Normalization vars.
         self.normalized = []
+        self.norm_avgs = []
+        self.norm_stds = []
+
+        # Dimensional metadata.
         self.num_features = 0
         self.num_points = 0
 
@@ -17,14 +27,15 @@ class Classifier:
     def Compute_Dist(self, inst_x, inst_y):
 
         # Verify same number of features.
-        if (len(inst_x) != len(inst_y)):
-            print("ERROR: Incompatible data points.")
+        # if (len(inst_x) != len(inst_y)):
+        #     print("ERROR: Incompatible data points.")
 
         dist_sum = 0
 
         for feat in range(self.num_features):
             dist_sum += pow((inst_x[feat + 1] - inst_y[feat + 1]), 2)
 
+        print(math.sqrt(dist_sum))
         return math.sqrt(dist_sum)
 
     # Normalize training data.
@@ -81,7 +92,7 @@ class Classifier:
 
             # New item.
             newline = [row[0]]
-            col_index = 1
+            col_index = 0
 
             # Normalize row by row, column by column.
             for col in row[1:]:
@@ -89,32 +100,37 @@ class Classifier:
 
             self.normalized.append(newline)
 
-        # Test print statements.
-        # print(self.instances)
-        # print("\n\n\n")
-        # print(self.normalized)
-        # print(self.num_features)
-        # print(self.num_points)
+        # Save normalization data.
+        self.norm_avgs = feature_avgs
+        self.norm_stds = feature_stds
 
     # Takes a datapoint and classifies it.
     def Test(self, inst):
 
         # Verify same number of features.
-        if (len(inst) != self.num_features + 1):
-            print("ERROR: Incompatible test instance.")
+        # if (len(inst) != self.num_features + 1):
+        # print("ERROR: Incompatible test instance.")
 
-        # Nearest neighbor label.
+        # Empty array for points and distances.
         nearest_inst = []
-        nearest_dist = 999999
 
         # Compare instance to training data.
         for t_inst in self.normalized:
-            inst_dist = self.Compute_Dist(inst, t_inst)
 
-            # Determine nearest distance.
-            if inst_dist < nearest_dist:
-                nearest_dist = inst_dist
-                nearest_inst = t_inst
+            inst_dist = self.Compute_Dist(inst, t_inst)
+            nearest_inst.append([inst_dist, t_inst])
+  
+        for i in range(self.num_points - 1):
+        # range(n) also work but outer loop will repeat one time more than needed.
+  
+            # Last i elements are already in place
+            for j in range(0, self.num_points - i - 1):
+  
+                # traverse the array from 0 to n-i-1
+                # Swap if the element found is greater
+                if nearest_inst[j][0] > nearest_inst[j + 1][0] :
+                    nearest_inst[j], nearest_inst[j + 1] = nearest_inst[j + 1], nearest_inst[j]
 
         # Return the class label.
-        return nearest_inst[0]
+        print(nearest_inst[0][1][0])
+        return nearest_inst[0][1][0]
